@@ -7,18 +7,16 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace FEM_Calculations
 {
-    class Globaldata 
+    class Globaldata
     {
-        protected double K, S, L, alpha, tinf, q;
-        protected double dL;
-        private Matrix<double> Hg, Pg, Tg, temp;
+        public double K, S, L, alpha, tinf, q;
+        public double dL;
+        public Matrix<double> Hg, Pg, Tg, temp;
         public int MN,ME;
-        //protected int[,] elementBuilder=new int[ME,3];
-        protected List<int[]> elementBuilder=new List<int[]>();
+        public List<int[]> elementBuilder=new List<int[]>();
 
         public Globaldata()
         {
-            
             try
             {
                 string dataContent = String.Empty;

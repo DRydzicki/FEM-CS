@@ -7,7 +7,7 @@ namespace FEM_Calculations
 {
 
     
-    class Element : Globaldata
+    class Element
     {
         private int node = 0;
         private int[] ID;
@@ -16,39 +16,39 @@ namespace FEM_Calculations
         public int elementNumber;
 
         
-        public Element(int elNumber) 
+        public Element(Globaldata gData,int elNumber) 
         {
-            int[] temp = elementBuilder[elNumber];
+            int[] temp = gData.elementBuilder[elNumber];
             elementNumber = temp[0];
             ID = new int[] { temp[0], temp[1] };         
             node = temp[2];
-            double C = S * K / (L / ME);
+            double C = gData.S * gData.K / (gData.L / gData.ME);
             H = DenseMatrix.OfArray( new double[,] { { C, -C }, { -C, C } } );
             Hbc = DenseMatrix.OfArray( new double[,] { { 0, 0 }, { 0, 0 } } );
             if (elNumber == 0 && node == 1)
             {
-                P[0] = q * S;
+                P[0] = gData.q * gData.S;
             }
             else if (elNumber == 0 && node == 2)
             {
-                P[0] = -1 * alpha * S * tinf;
-                Hbc[0,0] = alpha * S;
+                P[0] = -1 * gData.alpha * gData.S * gData.tinf;
+                Hbc[0,0] = gData.alpha * gData.S;
 
             }
             else if (node == 1)
             {
-                P[1] = q * S;
+                P[1] = gData.q * gData.S;
             }
             else if (node == 2)
             {
-                P[1] = -1 * alpha * S * tinf;
-                Hbc[1,1] = alpha * S;
+                P[1] = -1 * gData.alpha * gData.S * gData.tinf;
+                Hbc[1,1] = gData.alpha * gData.S;
             }
         }
 
 
 
-        public void DisplayEl()
+        public void Display()
         {
             Console.WriteLine("Element " + ID[0] + ": ");
             Console.WriteLine("Nodes: " + ID[0] + ", " + ID[1]);
