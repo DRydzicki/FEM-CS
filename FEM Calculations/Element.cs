@@ -9,40 +9,56 @@ namespace FEM_Calculations
     
     class Element
     {
-        private int node = 0;
-        private int[] ID;
-        public Matrix<double> H,Hbc;
-        public double[] P = new double[2] { 0, 0 };
+        private int _node = 0;
+        private int[] _ID;
+        private Matrix<double> _H,_Hbc;
+        private double[] _P = new double[2] { 0, 0 };
         public int elementNumber;
 
-        
+        public int Node { get => _node; set => _node = value; }
+        public int[] ID { get => _ID; set => _ID = value; }
+        public Matrix<double> H { get => _H; set => _H = value; }
+        public Matrix<double> Hbc { get => _Hbc; set => _Hbc = value; }
+        public double[] P { get => _P; set => _P = value; }
+
         public Element(Globaldata gData,int elNumber) 
         {
-            int[] temp = gData.elementBuilder[elNumber];
-            elementNumber = temp[0];
-            ID = new int[] { temp[0], temp[1] };         
-            node = temp[2];
-            double C = gData.S * gData.K / (gData.L / gData.ME);
-            H = DenseMatrix.OfArray( new double[,] { { C, -C }, { -C, C } } );
-            Hbc = DenseMatrix.OfArray( new double[,] { { 0, 0 }, { 0, 0 } } );
-            if (elNumber == 0 && node == 1)
+            try
             {
-                P[0] = gData.q * gData.S;
-            }
-            else if (elNumber == 0 && node == 2)
-            {
-                P[0] = -1 * gData.alpha * gData.S * gData.tinf;
-                Hbc[0,0] = gData.alpha * gData.S;
+                int[] temp = gData.ElementBuilder[elNumber];
+                elementNumber = temp[0];
+                ID = new int[] { temp[0], temp[1] };
+                Node = temp[2];
+                double C = gData.S * gData.K / (gData.L / gData.ME);
+                H = DenseMatrix.OfArray(new double[,] { { C, -C }, { -C, C } });
+                Hbc = DenseMatrix.OfArray(new double[,] { { 0, 0 }, { 0, 0 } });
+                if (elNumber == 0 && Node == 1)
+                {
+                    P[0] = gData.Q * gData.S;
+                }
+                else if (elNumber == 0 && Node == 2)
+                {
+                    P[0] = -1 * gData.Alpha * gData.S * gData.Tinf;
+                    Hbc[0, 0] = gData.Alpha * gData.S;
 
+                }
+                else if (Node == 1)
+                {
+                    P[1] = gData.Q * gData.S;
+                }
+                else if (Node == 2)
+                {
+                    P[1] = -1 * gData.Alpha * gData.S * gData.Tinf;
+                    Hbc[1, 1] = gData.Alpha * gData.S;
+                }
             }
-            else if (node == 1)
+            catch (NullReferenceException e) 
             {
-                P[1] = gData.q * gData.S;
+                Console.WriteLine(e.Message);
             }
-            else if (node == 2)
+            catch(ArgumentOutOfRangeException e1)
             {
-                P[1] = -1 * gData.alpha * gData.S * gData.tinf;
-                Hbc[1,1] = gData.alpha * gData.S;
+                Console.WriteLine(e1.Message);
             }
         }
 
