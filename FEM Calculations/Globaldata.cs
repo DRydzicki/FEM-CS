@@ -7,13 +7,14 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace FEM_Calculations
 {
-    class Globaldata
+    class Globaldata 
     {
         protected double K, S, L, alpha, tinf, q;
         protected double dL;
         private Matrix<double> Hg, Pg, Tg, temp;
         public int MN,ME;
-        protected List<int> elementBuilder=new List<int> { };
+        //protected int[,] elementBuilder=new int[ME,3];
+        protected List<int[]> elementBuilder=new List<int[]>();
 
         public Globaldata()
         {
@@ -33,19 +34,20 @@ namespace FEM_Calculations
                     Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
                     foreach (string line in lines)
                     {
-                        string[] keyAndValue = line.Split(new char[] { '=' });
+                        string[] keyAndValue = line.Split(new char[] { ' ' });
                         dataDictionary.Add(keyAndValue[0].Trim(), keyAndValue[1].Trim());
-                        //Console.WriteLine(keyAndValue[0] + "   " + keyAndValue[1]);
                         
                        if (keyAndValue[0].ToCharArray().Any(Char.IsDigit))
                        {
-                            var it = Convert.ToInt32(keyAndValue[0]);
-                            string[] temp = keyAndValue[1].Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-                            for (int i = 0; i < 3; i++)
-                                elementBuilder.Add(Convert.ToInt32(temp[i]));
+                            int id1 = Convert.ToInt32(keyAndValue[0]);
+                            int id2 = Convert.ToInt32(keyAndValue[1]);
+                            int bc = Convert.ToInt32(keyAndValue[2]);
+                            int[] temp = { id1, id2, bc };
+                            elementBuilder.Add(temp);
+                            
                        }
                     }
-
+                   
                     K = Convert.ToDouble(dataDictionary["K"]);
                     S = Convert.ToDouble(dataDictionary["S"]);
                     L = Convert.ToDouble(dataDictionary["L"]);

@@ -1,4 +1,5 @@
 ﻿using System;
+
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
@@ -12,17 +13,18 @@ namespace FEM_Calculations
         private int[] ID;
         public Matrix<double> H,Hbc;
         public double[] P = new double[2] { 0, 0 };
+        public int elementNumber;
 
         
         public Element(int elNumber) 
         {
-            int temp = elNumber * 3;
-            ID = new int[] { elementBuilder[temp], elementBuilder[temp+1] };
-            node = elementBuilder[temp + 2];
+            int[] temp = elementBuilder[elNumber];
+            elementNumber = temp[0];
+            ID = new int[] { temp[0], temp[1] };         
+            node = temp[2];
             double C = S * K / (L / ME);
             H = DenseMatrix.OfArray( new double[,] { { C, -C }, { -C, C } } );
             Hbc = DenseMatrix.OfArray( new double[,] { { 0, 0 }, { 0, 0 } } );
-            //P = DenseMatrix.OfArray(new double[,] { 0, 0 });
             if (elNumber == 0 && node == 1)
             {
                 P[0] = q * S;

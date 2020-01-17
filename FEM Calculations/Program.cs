@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace FEM_Calculations
 {
@@ -10,16 +11,17 @@ namespace FEM_Calculations
 
             var globalData = new Globaldata();
             int size = globalData.ME;
-            var el = new Element[size];
+            Element[] el = new Element[size];
             for (var i = 0; i < el.Length; i++)
             {
                 el[i] = new Element(i);
             }
+            el = el.OrderBy(x => x.elementNumber).ToArray();
 
-            /*for (var i = 0; i < el.Length; i++)
+            for (var i = 0; i < el.Length; i++)
             {
                 el[i].DisplayEl();
-            }*/
+            }
 
             Console.WriteLine("\nOUTPUT:");
             globalData.GCalcualte(el);
